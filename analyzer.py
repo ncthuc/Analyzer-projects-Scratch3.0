@@ -44,11 +44,11 @@ def analyze():
        
      logic(blocks_dicc) 
      flow_control(blocks_dicc)
-     #self.synchronization(file_blocks)
-     #self.abstraction(file_blocks, scratch)
-     #self.data(file_blocks)
-     #self.user_interactivity(file_blocks, scratch)
-     #self.parallelization(scratch)
+     synchronization(blocks_dicc)
+     #abstraction(blocks_dicc)
+     data_representation(blocks_dicc)
+     #user_interactivity(file_blocks, scratch)
+     #parallelization(scratch)
      
      print mastery
 
@@ -71,7 +71,7 @@ def logic(blocks):
   elif blocks['control_if']:
      score = 1
   
-  mastery["Logic"] = score
+  mastery['Logic'] = score
   
 
 
@@ -93,6 +93,85 @@ def flow_control(blocks):
        
      
   mastery['FlowControl'] = score
+
+
+
+"""Assign the Syncronization skill result"""
+def synchronization(blocks):
+    
+   score = 0
+   
+   if (blocks['control_wait_until'] or
+       blocks['event_whenbackdropswitchesto'] or
+       blocks['event_broadcastandwait']):
+            score = 3
+   elif (blocks['event_broadcast'] or 
+         blocks['event_whenbroadcastreceived'] or
+         blocks['control_stop']):
+            score = 2
+   elif blocks['control_wait']:
+            score = 1
+  
+   mastery['Synchronization'] = score
+
+
+
+"""Assign the Abstraction skill result
+def abstraction(blocks):
+        
+   score = 0
+        
+   if blocks['control_start_as_clone']:
+            score = 3
+   elif blocks["define %s"]:
+            score = 2
+   else:
+            scripts = 0
+            for script in self.iter_scripts(scratch):
+                if self.script_start_type(script) != self.NO_HAT:
+                    scripts += 1
+                    if scripts > 1:
+                        score = 1
+                        break
+   
+   mastery['Abstraction'] = score
+
+"""
+
+
+
+"""Assign the Data representation skill result"""
+def data_representation(blocks):
+        
+  score = 0
+  
+  modifiers = {'motion_movesteps', 'motion_gotoxy', 'motion_glidesecstoxy', 'motion_setx', 'motion_sety', 
+               'motion_changexby', 'motion_changeyby', 'motion_pointindirection', 'motion_pointtowards',
+               'motion_turnright', 'motion_turnleft', 'motion_goto', 
+               'looks_changesizeby', 'looks_setsizeto', 'looks_switchcostumeto', 'looks_nextcostume', 
+               'looks_changeeffectby', 'looks_seteffectto', 'looks_show', 'looks_hide', 'looks_switchbackdropto', 
+               'looks_nextbackdrop'}
+
+  lists = {'data_lengthoflist', 'data_showlist', 'data_insertatlist', 'data_deleteoflist', 'data_addtolist',
+           'data_replaceitemoflist', 'data_listcontainsitem', 'data_hidelist', 'data_itemoflist'}
+        
+  for item in lists:
+    if blocks[item]:
+       score = 3
+       mastery['DataRepresentation'] = score
+       return
+  
+  if blocks['data_changevariableby'] or blocks['data_setvariableto']:
+     score = 2
+  else:
+    for modifier in modifiers:
+       if blocks[modifier]:
+          score = 1
+
+
+  mastery['DataRepresentation'] = score
+
+
 
 
 if __name__ == '__main__':
