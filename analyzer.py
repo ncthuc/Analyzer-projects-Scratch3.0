@@ -34,12 +34,10 @@ def obtain_dict(project):
     for key, value in block.iteritems():
        if key == "opcode":
           blocks_dicc[value] += 1
-  
-  #print blocks_dicc    
 
 
 
-  """Run and return the results from the Mastery plugin."""
+"""Run and return the results of Mastery."""
 def analyze():
        
      logic(blocks_dicc) 
@@ -47,7 +45,7 @@ def analyze():
      synchronization(blocks_dicc)
      #abstraction(blocks_dicc)
      data_representation(blocks_dicc)
-     #user_interactivity(file_blocks, scratch)
+     user_interactivity(blocks_dicc)
      #parallelization(scratch)
      
      print mastery
@@ -170,6 +168,55 @@ def data_representation(blocks):
 
 
   mastery['DataRepresentation'] = score
+
+
+
+"""Assign the User Interactivity skill result"""
+def user_interactivity(blocks):
+        
+   score = 0
+       
+   proficiency = {'turn video %s', 'video %s on %s', 'when %s > %s',
+            'set video transparency to %s%%', 'loudness'}
+        
+   developing = {'event_whenkeypressed', 'event_whenthisspriteclicked', 'sensing_mousedown', 'sensing_keypressed',
+                 'sensing_askandwait', 'sensing_answer'}
+
+   for item in proficiency:
+      if blocks[item]:
+          mastery['UserInteractivity'] = 3
+          return
+   for item in developing:
+      if blocks[item]:
+          mastery['UserInteractivity'] = 2
+          return
+   if blocks['motion_goto_menu']:
+      if check_mouse(total_blocks) == 1:
+          mastery['UserInteractivity'] = 2
+          return
+   if blocks['sensing_touchingobjectmenu']:
+      if check_mouse(total_blocks) == 1:
+          mastery['UserInteractivity'] = 2
+          return
+   if blocks['event_whenflagclicked']:
+       score = 1
+    
+   mastery['UserInteractivity'] = score
+
+
+
+"""Check whether there is a block 'go to mouse' or 'touching mouse-pointer?' """
+def check_mouse(total_blocks):
+
+   for block in total_blocks:
+     for key, value in block.iteritems():
+       if key == 'fields':
+         for mouse_key, mouse_val in value.iteritems():
+           if (mouse_key == 'TO' or mouse_key =='TOUCHINGOBJECTMENU') and mouse_val[0] == '_mouse_':
+                 return 1
+
+   return 0
+
 
 
 
