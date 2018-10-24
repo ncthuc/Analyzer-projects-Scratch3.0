@@ -235,7 +235,6 @@ def parallelization (blocks):
      if dict_parall['BROADCAST_OPTION']:
           new_message = dict_parall['BROADCAST_OPTION']
           if new_message in messages:
-              print "ENTRA EN BROADCAST"
               score = 3
               mastery['Parallelization'] = score
               return
@@ -246,7 +245,6 @@ def parallelization (blocks):
       if dict_parall['BACKDROP']:
           new_backdrop = dict_parall['BACKDROP']
           if new_backdrop in backdrops:
-              print "ENTRA EN BACKDROPS"
               score = 3
               mastery['Parallelization'] = score
               return
@@ -257,7 +255,6 @@ def parallelization (blocks):
       if dict_parall['WHENGREATERTHANMENU']:
          new_multi = dict_parall['WHENGREATERTHANMENU']
          if new_multi in multimedia:
-              print "ENTRA EN Multimedia"
               score = 3
               mastery['Parallelization'] = score
               return
@@ -266,7 +263,6 @@ def parallelization (blocks):
 
    if blocks['videoSensing_whenMotionGreaterThan'] > 1:     # 2 Scripts start on the same multimedia (video) event
         score = 3
-        print "ENTRA EN VIDEO"
         mastery['Parallelization'] = score
         return
  
