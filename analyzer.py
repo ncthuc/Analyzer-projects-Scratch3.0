@@ -43,10 +43,10 @@ def analyze():
      logic(blocks_dicc) 
      flow_control(blocks_dicc)
      synchronization(blocks_dicc)
-     #abstraction(blocks_dicc)
+     abstraction(blocks_dicc)
      data_representation(blocks_dicc)
      user_interactivity(blocks_dicc)
-     #parallelization(scratch)
+     parallelization(blocks_dicc)
      
      print mastery
 
@@ -114,27 +114,26 @@ def synchronization(blocks):
 
 
 
-"""Assign the Abstraction skill result
+"""Assign the Abstraction skill result"""
 def abstraction(blocks):
         
    score = 0
         
    if blocks['control_start_as_clone']:
             score = 3
-   elif blocks["define %s"]:
+   elif blocks['procedures_definition']:
             score = 2
    else:
-            scripts = 0
-            for script in self.iter_scripts(scratch):
-                if self.script_start_type(script) != self.NO_HAT:
-                    scripts += 1
-                    if scripts > 1:
-                        score = 1
-                        break
-   
+      count = 0
+      for block in total_blocks:
+        for key, value in block.iteritems():
+          if key == "parent" and value == None:
+            count += 1
+      if count > 1 :
+         score = 1
+
    mastery['Abstraction'] = score
 
-"""
 
 
 
@@ -176,8 +175,8 @@ def user_interactivity(blocks):
         
    score = 0
        
-   proficiency = {'turn video %s', 'video %s on %s', 'when %s > %s',
-            'set video transparency to %s%%', 'loudness'}
+   proficiency = {'videoSensing_videoToggle', 'videoSensing_videoOn', 'videoSensing_whenMotionGreaterThan',
+                  'videoSensing_setVideoTransparency', 'sensing_loudness'}
         
    developing = {'event_whenkeypressed', 'event_whenthisspriteclicked', 'sensing_mousedown', 'sensing_keypressed',
                  'sensing_askandwait', 'sensing_answer'}
@@ -218,6 +217,89 @@ def check_mouse(total_blocks):
    return 0
 
 
+
+"""Assign the Parallelization skill result"""
+def parallelization (blocks):
+       
+   score = 0
+   keys = [] 
+   messages = []
+   backdrops = []
+   multimedia = []
+   dict_parall = {}
+ 
+   dict_parall = parallelization_dict()
+
+
+   if blocks['event_whenbroadcastreceived'] > 1:            # 2 Scripts start on the same received message
+     if dict_parall['BROADCAST_OPTION']:
+          new_message = dict_parall['BROADCAST_OPTION']
+          if new_message in messages:
+              print "ENTRA EN BROADCAST"
+              score = 3
+              mastery['Parallelization'] = score
+              return
+          else:
+              messages.append(new_message)
+
+   if blocks['event_whenbackdropswitchesto'] > 1:           # 2 Scripts start on the same backdrop change
+      if dict_parall['BACKDROP']:
+          new_backdrop = dict_parall['BACKDROP']
+          if new_backdrop in backdrops:
+              print "ENTRA EN BACKDROPS"
+              score = 3
+              mastery['Parallelization'] = score
+              return
+          else:
+              backdrops.append(new_backdrop)
+
+   if blocks['event_whengreaterthan'] > 1:                  # 2 Scripts start on the same multimedia (audio, timer) event
+      if dict_parall['WHENGREATERTHANMENU']:
+         new_multi = dict_parall['WHENGREATERTHANMENU']
+         if new_multi in multimedia:
+              print "ENTRA EN Multimedia"
+              score = 3
+              mastery['Parallelization'] = score
+              return
+         else:
+              multimedia.append(new_multi)
+
+   if blocks['videoSensing_whenMotionGreaterThan'] > 1:     # 2 Scripts start on the same multimedia (video) event
+        score = 3
+        print "ENTRA EN VIDEO"
+        mastery['Parallelization'] = score
+        return
+ 
+   if blocks['event_whenkeypressed'] > 1:                   # 2 Scripts start on the same key pressed
+     if dict_parall['KEY_OPTION']:
+          new_key = dict_parall['KEY_OPTION']
+          if new_key in keys:
+              score = 2
+          else:
+              keys.append(new_key)  
+                              
+   if blocks['event_whenthisspriteclicked'] > 1:           # Sprite with 2 scripts on clicked
+     score = 2
+  
+   if blocks['event_whenflagclicked'] > 1 and score == 0:  # 2 scripts on green flag
+     score = 1
+  
+
+   mastery['Parallelization'] = score
+
+
+
+
+def parallelization_dict ():
+   dicc = {}
+
+   for block in total_blocks:
+     for key, value in block.iteritems():
+         if key == 'fields':
+           for key_pressed, val_pressed in value.iteritems():  
+              dicc[key_pressed] = val_pressed   
+
+   return dicc
 
 
 
