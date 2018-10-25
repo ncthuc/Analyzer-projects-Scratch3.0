@@ -2,25 +2,29 @@
 
 import json
 from collections import Counter
+import sys
+import zipfile
 
 
-mastery = {}		#New dict to save punctuation
-total_blocks = [] #List with blocks
-blocks_dicc = Counter()		#Dict with blocks
+
+"""
+ Analyzer of projects sb3, the new version Scratch 3.0
+    
+"""
  
 
 
-def open_project(): 
+"""Start the analysis."""
+def process(filename):
+        
+  zip_file = zipfile.ZipFile(filename, "r")
+  json_project = json.loads(zip_file.open("project.json").read())
+  
+  return json_project
 
-   #Open JSON project
-   project = json.loads(open('project.json').read())
-   return project
 
-
-
+"""Obtain dict with the blocks"""
 def obtain_dict(project):
-
-  #Obtain the dict with the blocks
 
   for key, value in project.iteritems():
      if key == "targets":
@@ -48,7 +52,28 @@ def analyze():
      user_interactivity(blocks_dicc)
      parallelization(blocks_dicc)
      
-     print mastery
+
+
+"""Output the overall programming competence"""
+def finalize():
+   
+  print mastery
+    
+  total = 0
+  for i in mastery.items():
+     total += i[1]
+  print ("Total mastery points: %d/21" % total)
+  
+  average =  float (total) / 7
+  print ("Average mastery points: %.2f/3" % average)
+        
+  if average > 2:
+    print "Overall programming competence: Proficiency"
+  elif average > 1:
+    print "Overall programming competence: Developing"
+  else:
+    print "Overall programming competence: Basic"
+
 
 
 
@@ -61,7 +86,7 @@ def logic(blocks):
   for operation in operations:
      if blocks[operation]:
         score = 3
-        mastery["logic"] = score
+        mastery['Logic'] = score
         return
   
   if blocks['control_if_else']:
@@ -298,10 +323,14 @@ def parallelization_dict ():
    return dicc
 
 
+ 
 
-if __name__ == '__main__':
- project = open_project()
- obtain_dict(project)
- analyze()
+mastery = {}		#New dict to save punctuation
+total_blocks = [] #List with blocks
+blocks_dicc = Counter()		#Dict with blocks
 
+project = process(sys.argv[1])
+obtain_dict(project)
+analyze()
+finalize()
 
