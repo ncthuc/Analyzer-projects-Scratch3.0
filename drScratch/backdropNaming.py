@@ -51,7 +51,7 @@ class BackdropNaming():
 
 
 def main(filename):
-    """The entrypoint for the 'spriteNaming' extension"""
+    """The entrypoint for the 'backdropNaming' extension"""
 
     naming = BackdropNaming()
     naming.analyze(filename)
