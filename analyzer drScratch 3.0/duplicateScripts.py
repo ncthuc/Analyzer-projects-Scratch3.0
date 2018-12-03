@@ -67,8 +67,7 @@ class DuplicateScripts():
    def finalize(self):
    
      result = ""
-     if self.total_duplicate > 0:
-       result += ("%d duplicate scripts found" % self.total_duplicate)
+     result += ("%d duplicate scripts found" % self.total_duplicate)
        #for duplicate in self.list_duplicate:
        #   result += duplicate
        #   result += "\n"
